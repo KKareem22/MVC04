@@ -14,15 +14,10 @@ namespace Session04.DAL.Repositories.Classes
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<Session>> GetAllSessionsWithTrainerAndCategoryAsync(Expression<Func<Session, bool>>? predicate = null, CancellationToken ct = default)
+        public async Task<IEnumerable<Session>> GetAllSessionsWithTrainerAndCategoryAsync(CancellationToken ct = default)
         {
-            IQueryable<Session> Query = _dbContext.Sessions.Where(predicate);
-            if (predicate is not null)
-            {
-                Query = Query.Where(predicate);
-            }
-
-            return await Query.ToListAsync();
+            var query = _dbContext.Sessions.AsNoTracking().Include(s => s.Trainer).Include(s => s.Category);
+            return await query.ToListAsync(ct);
 
         }
 

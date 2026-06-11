@@ -11,42 +11,13 @@ namespace Session04.BLL.Mapping
     {
         public MappingProfiles()
         {
-            MapTrainer();
+            
             MapSession();
             MapMember();
             MapPlan();
 
         }
-        #region Trainer
-        private void MapTrainer()
-        {
-            CreateMap<CreateTrainerViewModel, Trainer>()
-                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => new Address
-                {
-                    BuildingNumber = src.BuildingNumber,
-                    Street = src.Street,
-                    City = src.City
-                }));
-            CreateMap<Trainer, TrainerViewModel>()
-                            .ForMember(dest => dest.Address,
-                            opt => opt.MapFrom(src => $"{src.Address.BuildingNumber} - {src.Address.Street} - {src.Address.City}"));
-
-            CreateMap<Trainer, TrainerToUpdateViewModel>()
-                .ForMember(dist => dist.Street, opt => opt.MapFrom(src => src.Address.Street))
-                .ForMember(dist => dist.City, opt => opt.MapFrom(src => src.Address.City))
-                .ForMember(dist => dist.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber));
-
-            CreateMap<TrainerToUpdateViewModel, Trainer>()
-            .ForMember(dest => dest.Name, opt => opt.Ignore())
-            .AfterMap((src, dest) =>
-            {
-                dest.Address.BuildingNumber = src.BuildingNumber;
-                dest.Address.City = src.City;
-                dest.Address.Street = src.Street;
-                dest.UpdatedAt = DateTime.Now;
-            });
-        }
-        #endregion
+        
         #region Session
         private void MapSession()
         {
