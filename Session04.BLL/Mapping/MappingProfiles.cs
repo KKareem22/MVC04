@@ -79,10 +79,16 @@ namespace Session04.BLL.Mapping
         #region Plan
         private void MapPlan()
         {
-            CreateMap<Plan, PlanViewModel>();
-            CreateMap<Plan, UpdatePlanViewModel>().ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Name));
+            CreateMap<Plan, PlanViewModel>()
+                .ForMember(dest=>dest.DurationDays,opt=>opt.MapFrom(src=>src.DurationInDays));
+
+            CreateMap<Plan, UpdatePlanViewModel>().ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest=>dest.DurationDays,opt=>opt.MapFrom(src=>src.DurationInDays));
+
+
             CreateMap<UpdatePlanViewModel, Plan>()
            .ForMember(dest => dest.Name, opt => opt.Ignore())
+           .ForMember(dest=>dest.DurationInDays,opt=>opt.MapFrom(src=>src.DurationDays))
            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.Now));
 
         }

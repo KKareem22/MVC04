@@ -6,12 +6,13 @@ using Session04.BLL.Services.Interfaces;
 using Session04.DAL.DbContexts;
 using Session04.DAL.Repositories.Classes;
 using Session04.DAL.Repositories.Interfaces;
+using Session04.PL;
 
 namespace Session04.Pl
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,7 @@ namespace Session04.Pl
 
 
             var app = builder.Build();
+            await app.MigrateAndSeedAsync();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
