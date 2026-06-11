@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Session04.DAL.DbContexts;
+using Session04.DAL.Repositories.Classes;
+using Session04.DAL.Repositories.Interfaces;
+
 namespace Session04.Pl
 {
     public class Program
@@ -8,6 +13,17 @@ namespace Session04.Pl
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<GymDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+            });
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
 
             var app = builder.Build();
 
