@@ -1,4 +1,8 @@
+using GymManagementSystem.BLL.Services.Classes;
 using Microsoft.EntityFrameworkCore;
+using Session04.BLL.Mapping;
+using Session04.BLL.Services.Classes;
+using Session04.BLL.Services.Interfaces;
 using Session04.DAL.DbContexts;
 using Session04.DAL.Repositories.Classes;
 using Session04.DAL.Repositories.Interfaces;
@@ -22,6 +26,12 @@ namespace Session04.Pl
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ITrainerService, TrainerService>();
+            builder.Services.AddScoped<IPlanService, PlanService>();
+            builder.Services.AddScoped<ISessionService, SessionService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
+
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
 
 
 
