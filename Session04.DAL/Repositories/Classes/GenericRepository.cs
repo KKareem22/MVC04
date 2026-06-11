@@ -6,52 +6,49 @@ using System.Linq.Expressions;
 
 namespace Session04.DAL.Repositories.Classes
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity, new()
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity, new()
     {
-        private readonly GymDbContext _dbContext;
-        private readonly DbSet<TEntity> _dbSet;
-
-        public GenericRepository(GymDbContext dbContext)
+        private readonly GymDbContext dbContext;
+        public GenericRepository(GymDbContext c)
         {
-            _dbContext = dbContext;
-            _dbSet = dbContext.Set<TEntity>();
+            dbContext = c;
+
         }
-        public async Task<int> AddAsync(TEntity entity)
+        public void Add(T entity)
         {
-
-            _dbSet.Add(entity);
-            return await _dbContext.SaveChangesAsync();
+            dbContext.Add(entity);
         }
 
-        public Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default) => _dbSet.AsNoTracking().AnyAsync(predicate, ct);
-
-
-        public async Task<int> DeleteAsync(TEntity entity)
+        public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken ct)
         {
-            _dbSet.Remove(entity);
-            return await _dbContext.SaveChangesAsync();
+            return dbContext.Set<T>().AsNoTracking().AnyAsync(predicate, ct);
         }
 
-        public async Task<TEntity?> FirstOrDeafultAsync(Expression<Func<TEntity, bool>> predicate, bool Tracking = false, CancellationToken ct = default)
+        public void Delete(T entity)
         {
-            IQueryable<TEntity?> query = Tracking ? _dbSet : _dbSet.AsNoTracking();
-            return await query.FirstOrDefaultAsync(predicate, ct);
+            dbContext.Remove(entity);
         }
 
-        public async Task<IEnumerable<TEntity>> GetALLAsync(bool tracking = false, CancellationToken ct = default)
+        public Task<T?> FirstorDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
         {
-            IQueryable<TEntity> query = tracking ? _dbSet : _dbSet.AsNoTracking();
+            return dbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate, ct);
+        }
+
+        public void Update(T entity)
+        {
+            dbContext.Update(entity);
+        }
+
+        async Task<IEnumerable<T>> IGenericRepository<T>.GetAllAsync(bool track, CancellationToken ct)
+        {
+            var query = track ? dbContext.Set<T>() : dbContext.Set<T>().AsNoTracking();
             return await query.ToListAsync(ct);
         }
 
-        public async Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default) =>
-            await _dbSet.FindAsync([id], ct);
-
-
-        public async Task<int> UpdateAsync(TEntity entity)
+        async Task<T?> IGenericRepository<T>.GetByIdAsync(int id, CancellationToken ct)
         {
-            _dbSet.Update(entity);
-            return await _dbContext.SaveChangesAsync();
+            return await dbContext.Set<T>().FindAsync(id, ct);
         }
+
     }
 }
