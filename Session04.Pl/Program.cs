@@ -31,7 +31,7 @@ namespace Session04.Pl
             builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
-
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsServices>();
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
 
 

@@ -13,7 +13,7 @@ namespace Session04.DAL.Repositories.Interfaces
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken ct);
 
         Task<T?> FirstorDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
-
+        Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken ct = default);
 
     }
 }

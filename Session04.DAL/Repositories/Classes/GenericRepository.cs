@@ -24,6 +24,12 @@ namespace Session04.DAL.Repositories.Classes
             return dbContext.Set<T>().AsNoTracking().AnyAsync(predicate, ct);
         }
 
+        public Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null, CancellationToken ct = default)
+        {
+           return predicate is null? dbContext.Set<T>().AsNoTracking().CountAsync(ct)
+                : dbContext.Set<T>().AsNoTracking().CountAsync(predicate, ct);
+        }
+
         public void Delete(T entity)
         {
             dbContext.Remove(entity);
