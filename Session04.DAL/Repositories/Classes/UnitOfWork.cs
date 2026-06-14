@@ -7,13 +7,18 @@ namespace Session04.DAL.Repositories.Classes
     public class UnitOfWork : IUnitOfWork
     {
         public ISessionRepository _sessionRepository { get; }
+
+        public IMemberShipRepository _memberShipRepository { get; }
+
         private readonly Dictionary<string, object> _repositories = [];
         private readonly GymDbContext _dbContext;
 
-        public UnitOfWork(GymDbContext dbContext, ISessionRepository sessionRepository)
+        public UnitOfWork(GymDbContext dbContext, ISessionRepository sessionRepository
+            ,IMemberShipRepository memberShipRepository)
         {
             _dbContext = dbContext;
             _sessionRepository = sessionRepository;
+            _memberShipRepository= memberShipRepository;
         }
 
 

@@ -26,12 +26,14 @@ namespace Session04.Pl
             });
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ITrainerService, TrainerService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<IAnalyticsService, AnalyticsServices>();
+            builder.Services.AddScoped<IMemberShipsService, MemberShipService>();
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
 
 

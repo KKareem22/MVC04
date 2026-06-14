@@ -2,6 +2,7 @@
 using Session04.BLL.ViewModels.MemberViewModels;
 using Session04.BLL.ViewModels.PlanViewModels;
 using Session04.BLL.ViewModels.SessionViewModels;
+using Session04.BLL.ViewModels.MemberShipViewModels;
 using Session04.BLL.ViewModels.TrainerViewModels;
 using Session04.DAL.Models;
 
@@ -11,13 +12,14 @@ namespace Session04.BLL.Mapping
     {
         public MappingProfiles()
         {
-            
+
             MapSession();
             MapMember();
             MapPlan();
+            MapMembership();
 
         }
-        
+
         #region Session
         private void MapSession()
         {
@@ -31,6 +33,23 @@ namespace Session04.BLL.Mapping
 
             CreateMap<Trainer, TrainerSelectViewModel>();
             CreateMap<Category, CategorySelectViewModel>();
+        }
+        #endregion
+        #region MemberShip
+        private void MapMembership()
+        {
+            CreateMap<MemberShip, MemberShipViewModel>()
+                .ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Plan.Name))
+                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.CreatedAt.ToShortDateString()))
+                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src =>src.CreatedAt.AddDays(src.Plan.DurationInDays)));
+
+            CreateMap<CreateMemberShipViewModel, MemberShip>();
+            CreateMap<Plan, PlanSelectListViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dect=>dect.Name,opt=>opt.MapFrom(src=>src.Name));
+             CreateMap<Member, MemberSelectListViewModel>()
+                .ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.Id))
+                .ForMember(dest=>dest.Name,opt=>opt.MapFrom(src=>src.Name));
         }
         #endregion
         #region Member
@@ -80,15 +99,15 @@ namespace Session04.BLL.Mapping
         private void MapPlan()
         {
             CreateMap<Plan, PlanViewModel>()
-                .ForMember(dest=>dest.DurationDays,opt=>opt.MapFrom(src=>src.DurationInDays));
+                .ForMember(dest => dest.DurationDays, opt => opt.MapFrom(src => src.DurationInDays));
 
             CreateMap<Plan, UpdatePlanViewModel>().ForMember(dest => dest.PlanName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest=>dest.DurationDays,opt=>opt.MapFrom(src=>src.DurationInDays));
+                .ForMember(dest => dest.DurationDays, opt => opt.MapFrom(src => src.DurationInDays));
 
 
             CreateMap<UpdatePlanViewModel, Plan>()
            .ForMember(dest => dest.Name, opt => opt.Ignore())
-           .ForMember(dest=>dest.DurationInDays,opt=>opt.MapFrom(src=>src.DurationDays))
+           .ForMember(dest => dest.DurationInDays, opt => opt.MapFrom(src => src.DurationDays))
            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.Now));
 
         }
