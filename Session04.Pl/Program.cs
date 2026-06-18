@@ -1,15 +1,45 @@
+using GymManagementSystem.BLL.Services.Classes;
+using Microsoft.EntityFrameworkCore;
+using Session04.BLL.Mapping;
+using Session04.BLL.Services.Classes;
+using Session04.BLL.Services.Interfaces;
+using Session04.DAL.DbContexts;
+using Session04.DAL.Repositories.Classes;
+using Session04.DAL.Repositories.Interfaces;
+using Session04.PL;
+
 namespace Session04.Pl
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddDbContext<GymDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+            });
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<IMemberShipRepository, MemberShipRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<ITrainerService, TrainerService>();
+            builder.Services.AddScoped<IPlanService, PlanService>();
+            builder.Services.AddScoped<ISessionService, SessionService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsServices>();
+            builder.Services.AddScoped<IMemberShipsService, MemberShipService>();
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
+
+
+
             var app = builder.Build();
+            await app.MigrateAndSeedAsync();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

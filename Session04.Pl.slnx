@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="Session04.BLL/Session04.BLL.csproj" />
+  <Project Path="Session04.DAL/Session04.DAL.csproj" />
   <Project Path="Session04.Pl/Session04.Pl.csproj" />
 </Solution>
